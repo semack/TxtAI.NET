@@ -22,6 +22,9 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
+    - name: Build
+      run: |
+        dotnet build TxtAI.NET.sln --configuration Release --no-restore
     - name: Pack
       run: |
         dotnet pack TxtAI.NET.sln --configuration Release --no-restore --output ./nupkgs --version-suffix .${{ github.run_number }}
