@@ -1,5 +1,6 @@
 # txtai: Semantic search and workflows for .NET
 
+[![Publish to NUGET](https://github.com/semack/TxtAI.NET/actions/workflows/publish.yml/badge.svg?branch=master)](https://github.com/semack/TxtAI.NET/actions/workflows/publish.yml)
 [![Nuget](https://img.shields.io/nuget/v/TxtAI.NET)](https://www.nuget.org/packages/TxtAI.NET)
 [![GitHub issues](https://img.shields.io/github/issues-raw/semack/TxtAI.NET)](https://github.com/semack/TxtAI.NET/issues)
 [![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/semack/TxtAI.NET)](https://github.com/semack/TxtAI.NET/commits/)
