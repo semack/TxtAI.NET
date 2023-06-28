@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  txtai-api:
+    build:
+      context: .
+      dockerfile: txtai-api.Dockerfile
+    ports:
+    - 8000:8000
+    volumes:
+      - ./app.yml:/app/app.yaml
+      - ./.cache:/models
+    environment:
+      - CONFIG=/app/app.yaml
+      - TRANSFORMERS_CACHE=/models
