@@ -9,18 +9,16 @@ namespace TxtAI
     public class Summary
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Summary(string url)
+        public Summary(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<string> SummaryAsync(string text, int? minLength, int? maxLength)
         {
             var response =
-                await _client.GetAsync($"{_url}/summary?text={text}&minLength={minLength}&maxLength={maxLength}");
+                await _client.GetAsync("summary?text={text}&minLength={minLength}&maxLength={maxLength}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -30,7 +28,7 @@ namespace TxtAI
         public async Task<List<string>> BatchSummaryAsync(List<string> texts, int? minLength, int? maxLength)
         {
             var payload = new { texts, minLength, maxLength };
-            var response = await _client.PostAsJsonAsync($"{_url}/batchsummary", payload);
+            var response = await _client.PostAsJsonAsync("batchsummary", payload);
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

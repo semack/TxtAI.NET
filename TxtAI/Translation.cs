@@ -9,17 +9,15 @@ namespace TxtAI
     public class Translation
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Translation(string url)
+        public Translation(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(_url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<string> TranslateAsync(string text, string target, string source)
         {
-            var response = await _client.GetAsync($"{_url}/translate?text={text}&target={target}&source={source}");
+            var response = await _client.GetAsync("translate?text={text}&target={target}&source={source}");
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
@@ -31,7 +29,7 @@ namespace TxtAI
         {
             var payload = new { texts, target, source };
 
-            var response = await _client.PostAsJsonAsync($"{_url}/batchtranslate", payload);
+            var response = await _client.PostAsJsonAsync("batchtranslate", payload);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());

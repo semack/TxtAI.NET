@@ -9,17 +9,15 @@ namespace TxtAI
     public class Transcription
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Transcription(string url)
+        public Transcription(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(_url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<string> TranscribeAsync(string file)
         {
-            var response = await _client.GetAsync($"{_url}/transcribe?file={file}");
+            var response = await _client.GetAsync("transcribe?file={file}");
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
@@ -31,7 +29,7 @@ namespace TxtAI
         {
             var payload = new { files };
 
-            var response = await _client.PostAsJsonAsync($"{_url}/batchtranscribe", payload);
+            var response = await _client.PostAsJsonAsync("batchtranscribe", payload);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());

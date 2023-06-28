@@ -9,17 +9,15 @@ namespace TxtAI
     public class Segmentation
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Segmentation(string url)
+        public Segmentation(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<object> SegmentAsync(string text)
         {
-            var response = await _client.GetAsync($"{_url}/segment?text={text}");
+            var response = await _client.GetAsync("segment?text={text}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -28,7 +26,7 @@ namespace TxtAI
 
         public async Task<List<object>> BatchSegmentAsync(List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/batchsegment", new { texts });
+            var response = await _client.PostAsJsonAsync("batchsegment", new { texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

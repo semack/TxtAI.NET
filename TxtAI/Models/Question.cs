@@ -4,13 +4,6 @@ namespace TxtAI.Models
 {
     public class Question
     {
-        public Question(string name, string query, string questionText, bool snippet)
-        {
-            Name = name;
-            Query = query;
-            QuestionText = questionText;
-            Snippet = snippet;
-        }
 
         [JsonProperty("name")] public string Name { get; set; }
 

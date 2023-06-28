@@ -4,12 +4,6 @@ namespace TxtAI.Models
 {
     public class Answer
     {
-        public Answer(string name, string answerText)
-        {
-            Name = name;
-            AnswerText = answerText;
-        }
-
         [JsonProperty("name")] public string Name { get; set; }
 
         [JsonProperty("answer")] public string AnswerText { get; set; }

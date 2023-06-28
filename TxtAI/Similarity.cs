@@ -10,17 +10,15 @@ namespace TxtAI
     public class Similarity
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Similarity(string url)
+        public Similarity(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<List<IndexResult>> SimilarityAsync(string query, List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/similarity", new { query, texts });
+            var response = await _client.PostAsJsonAsync("similarity", new { query, texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -29,7 +27,7 @@ namespace TxtAI
 
         public async Task<List<List<IndexResult>>> BatchSimilarityAsync(List<string> queries, List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/batchsimilarity", new { queries, texts });
+            var response = await _client.PostAsJsonAsync("batchsimilarity", new { queries, texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

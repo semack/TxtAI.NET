@@ -9,17 +9,15 @@ namespace TxtAI
     public class Extractor
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Extractor(string url)
+        public Extractor(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<List<Answer>> ExtractAsync(List<Question> queue, List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/extract", new { queue, texts });
+            var response = await _client.PostAsJsonAsync("extract", new { queue, texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

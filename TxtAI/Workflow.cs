@@ -9,19 +9,17 @@ namespace TxtAI
     public class Workflow
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Workflow(string url)
+        public Workflow(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(_url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<List<object>> WorkflowActionAsync(string name, List<string> elements)
         {
             var payload = new { name, elements };
 
-            var response = await _client.PostAsJsonAsync($"{_url}/workflow", payload);
+            var response = await _client.PostAsJsonAsync("workflow", payload);
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());

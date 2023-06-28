@@ -9,17 +9,15 @@ namespace TxtAI
     public class Embeddings
     {
         private readonly HttpClient _client;
-        private readonly string _url;
 
-        public Embeddings(string url)
+        public Embeddings(string baseUrl, int timeout = 120, string token = null)
         {
-            _url = url;
-            _client = API.Create<HttpClient>(url);
+            _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
         public async Task<List<SearchResult>> SearchAsync(string query, int limit)
         {
-            var response = await _client.GetAsync($"{_url}/search?query={query}&limit={limit}");
+            var response = await _client.GetAsync("search?query={query}&limit={limit}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -28,7 +26,7 @@ namespace TxtAI
 
         public async Task<List<List<SearchResult>>> BatchSearchAsync(List<string> queries, List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/batchsearch", new { queries, texts });
+            var response = await _client.PostAsJsonAsync("batchsearch", new { queries, texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -37,28 +35,28 @@ namespace TxtAI
 
         public async Task AddAsync(List<Document> documents)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/add", documents);
+            var response = await _client.PostAsJsonAsync("add", documents);
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
         public async Task IndexAsync()
         {
-            var response = await _client.GetAsync($"{_url}/index");
+            var response = await _client.GetAsync("index");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
         public async Task UpsertAsync()
         {
-            var response = await _client.GetAsync($"{_url}/upsert");
+            var response = await _client.GetAsync("upsert");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<List<string>> DeleteAsync(List<string> ids)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/delete", ids);
+            var response = await _client.PostAsJsonAsync("delete", ids);
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -67,7 +65,7 @@ namespace TxtAI
 
         public async Task<int> CountAsync()
         {
-            var response = await _client.GetAsync($"{_url}/count");
+            var response = await _client.GetAsync("count");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -76,7 +74,7 @@ namespace TxtAI
 
         public async Task<List<IndexResult>> SimilarityAsync(string query, List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/similarity", new { query, texts });
+            var response = await _client.PostAsJsonAsync("similarity", new { query, texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -85,7 +83,7 @@ namespace TxtAI
 
         public async Task<List<List<IndexResult>>> BatchSimilarityAsync(List<string> queries, List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/batchsimilarity", new { queries, texts });
+            var response = await _client.PostAsJsonAsync("batchsimilarity", new { queries, texts });
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -94,7 +92,7 @@ namespace TxtAI
 
         public async Task<List<double>> TransformAsync(string text)
         {
-            var response = await _client.GetAsync($"{_url}/transform?text={text}");
+            var response = await _client.GetAsync("transform?text={text}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 
@@ -103,7 +101,7 @@ namespace TxtAI
 
         public async Task<List<List<double>>> BatchTransformAsync(List<string> texts)
         {
-            var response = await _client.PostAsJsonAsync($"{_url}/batchtransform", texts);
+            var response = await _client.PostAsJsonAsync("batchtransform", texts);
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

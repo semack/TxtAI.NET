@@ -4,30 +4,21 @@ using System.Net.Http.Headers;
 
 namespace TxtAI
 {
-    public class API
+    class Api
     {
-        private readonly static HttpClient _httpClient = new HttpClient();
-
-        static API()
+        public static T Create<T>(string baseUrl, int timeout = 120, string token = null) where T : HttpClient, new()
         {
-            _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var client = new T();
 
-            _httpClient.Timeout = TimeSpan.FromMinutes(2);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.Timeout = TimeSpan.FromSeconds(timeout);
+            if (string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Interceptor like functionality
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "Your Token");
-        }
+            client.BaseAddress = new Uri(baseUrl);
 
-        public static T Create<T>(string url) where T : class
-        {
-            _httpClient.BaseAddress = new Uri(url);
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var service = Activator.CreateInstance(typeof(T), _httpClient) as T;
-
-            return service;
+            return client;
         }
     }
 }
