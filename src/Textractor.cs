@@ -17,7 +17,7 @@ namespace TxtAI.NET
 
         public async Task<string> TextractAsync(string file)
         {
-            var response = await _client.GetAsync("textract?file={file}");
+            var response = await _client.GetAsync($"textract?file={file}");
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());

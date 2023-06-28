@@ -17,7 +17,7 @@ namespace TxtAI.NET
 
         public async Task<string> TranslateAsync(string text, string target, string source)
         {
-            var response = await _client.GetAsync("translate?text={text}&target={target}&source={source}");
+            var response = await _client.GetAsync($"translate?text={text}&target={target}&source={source}");
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());

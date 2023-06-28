@@ -18,7 +18,7 @@ namespace TxtAI.NET
         public async Task<string> SummaryAsync(string text, int? minLength, int? maxLength)
         {
             var response =
-                await _client.GetAsync("summary?text={text}&minLength={minLength}&maxLength={maxLength}");
+                await _client.GetAsync($"summary?text={text}&minLength={minLength}&maxLength={maxLength}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

@@ -6,3 +6,4 @@ riderModule.iml
 txtai-weaviate-docker-compose-master/
 .idea/
 .git/
+.cache/

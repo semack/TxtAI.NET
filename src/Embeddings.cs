@@ -17,7 +17,7 @@ namespace TxtAI.NET
 
         public async Task<List<SearchResult>> SearchAsync(string query, int limit)
         {
-            var response = await _client.GetAsync("search?query={query}&limit={limit}");
+            var response = await _client.GetAsync($"search?query={query}&limit={limit}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

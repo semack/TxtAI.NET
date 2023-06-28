@@ -17,7 +17,7 @@ namespace TxtAI.NET
 
         public async Task<object> SegmentAsync(string text)
         {
-            var response = await _client.GetAsync("segment?text={text}");
+            var response = await _client.GetAsync($"segment?text={text}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());
 

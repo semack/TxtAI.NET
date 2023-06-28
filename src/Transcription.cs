@@ -17,7 +17,7 @@ namespace TxtAI.NET
 
         public async Task<string> TranscribeAsync(string file)
         {
-            var response = await _client.GetAsync("transcribe?file={file}");
+            var response = await _client.GetAsync($"transcribe?file={file}");
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception(await response.Content.ReadAsStringAsync());

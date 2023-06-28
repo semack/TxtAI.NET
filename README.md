@@ -1,1 +1,1 @@
-# txtai: Semantic search and workflows in C#
+# txtai: Semantic search and workflows for .NET
