@@ -22,9 +22,9 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Pack & Publish
+    - name: Pack
       run: |
-        dotnet pack TextAI.NET.sln --configuration Release --no-restore --output ./nupkgs --version-suffix .${{ github.run_number }}
-    - name: Push
+        dotnet pack src/TextAI.NET.cspoj --configuration Release --no-restore --output ./nupkgs --version-suffix .${{ github.run_number }}
+    - name: Publish
       run: |
         dotnet nuget push ./nupkgs/*.nupkg --source ${{secrets.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY}} 
