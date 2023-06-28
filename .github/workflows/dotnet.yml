@@ -24,7 +24,7 @@ jobs:
       run: dotnet restore
     - name: Pack
       run: |
-        dotnet pack src/TextAI.NET.csproj --configuration Release --no-restore --output ./nupkgs --version-suffix .${{ github.run_number }}
+        dotnet pack TxtAI.NET.sln --configuration Release --no-restore --output ./nupkgs --version-suffix .${{ github.run_number }}
     - name: Publish
       run: |
         dotnet nuget push ./nupkgs/*.nupkg --source ${{secrets.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY}} 
