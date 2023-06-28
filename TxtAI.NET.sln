@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxtAI.NET", "TxtAI.NET\TxtAI.NET.csproj", "{67CB9EF5-D85C-43A8-B86B-738A648435F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src", "src\TxtAI.NET.csproj", "{67CB9EF5-D85C-43A8-B86B-738A648435F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{CEF9AE11-FD5A-4084-B541-16DEC23EC474}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{73E90455-04CF-4D57-9982-BC6A1E5796E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
