@@ -1,0 +1,30 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Pack & Publish
+      run: |
+        dotnet pack TextAI.NET.sln --configuration Release --no-restore --output ./nupkgs --version-suffix .${{ github.run_number }}
+    - name: Push
+      run: |
+        dotnet nuget push ./nupkgs/*.nupkg --source ${{secrets.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY}} 
