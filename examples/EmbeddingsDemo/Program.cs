@@ -3,17 +3,17 @@ using TxtAI.NET.Models;
 
 namespace EmbeddingsDemo;
 
-public class EmbeddingsDemo 
+public class EmbeddingsDemo
 {
-    public static async Task Main(string[] args) 
+    public static async Task Main(string[] args)
     {
-        try 
+        try
         {
             var embeddings = new Embeddings("http://localhost:8000");
 
-            List<string> data = new List<string> 
+            var data = new List<string>
             {
-                "US tops 5 million confirmed virus cases", 
+                "US tops 5 million confirmed virus cases",
                 "Canada's last fully intact ice shelf has suddenly collapsed, forming a Manhattan-sized iceberg",
                 "Beijing mobilises invasion craft along coast as Taiwan tensions escalate",
                 "The National Park Service warns against sacrificing slower friends in a bear attack",
@@ -22,11 +22,11 @@ public class EmbeddingsDemo
             };
 
             var documents = new List<Document>();
-            for (var x = 0; x < data.Count; x++) 
+            for (var x = 0; x < data.Count; x++)
             {
                 var d = new Document
                 {
-                    Id = x.ToString(), 
+                    Id = x.ToString(),
                     Text = data[x]
                 };
                 documents.Add(d);
@@ -36,12 +36,16 @@ public class EmbeddingsDemo
             Console.WriteLine($"{"Query",-20} {"Best Match"}");
             Console.WriteLine(new string('-', 50));
 
-            var queries = new List<string> { "feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky", "dishonest junk" };
+            var queries = new List<string>
+            {
+                "feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky",
+                "dishonest junk"
+            };
 
             foreach (var similarityQuery in queries)
             {
                 var similarityResults = await embeddings.SimilarityAsync(similarityQuery, data);
-                var similarityUid = Int32.Parse(similarityResults[0].Id);
+                var similarityUid = int.Parse(similarityResults[0].Id);
                 Console.WriteLine($"{similarityQuery,-20} {data[similarityUid]}");
             }
 
@@ -52,19 +56,22 @@ public class EmbeddingsDemo
             Console.WriteLine($"{"Query",-20} {"Best Match"}");
             Console.WriteLine(new string('-', 50));
 
-            foreach (var searchQuery in queries) 
+            foreach (var searchQuery in queries)
             {
                 var searchResults = await embeddings.SearchAsync(searchQuery, 1);
-                var searchUid = Int32.Parse(searchResults[0].Id);
+                var searchUid = int.Parse(searchResults[0].Id);
                 Console.WriteLine($"{searchQuery,-20} {data[searchUid]}");
             }
 
             data[0] = "See it: baby panda born";
-            var updates = new List<Document> { new()
+            var updates = new List<Document>
             {
-                Id = "0",
-                Text = data[0]
-            } };
+                new()
+                {
+                    Id = "0",
+                    Text = data[0]
+                }
+            };
 
             await embeddings.DeleteAsync(new List<string> { "5" });
             await embeddings.AddAsync(updates);
@@ -74,17 +81,17 @@ public class EmbeddingsDemo
             Console.WriteLine($"{"Query",-20} {"Best Match"}");
             Console.WriteLine(new string('-', 50));
 
-            string query = "feel good story";
+            var query = "feel good story";
             var results = await embeddings.SearchAsync(query, 1);
-            var uid = Int32.Parse(results[0].Id);
+            var uid = int.Parse(results[0].Id);
             Console.WriteLine($"{query,-20} {data[uid]}");
 
             var count = await embeddings.CountAsync();
             Console.WriteLine($"\nTotal Count: {count}");
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
-    }    
+    }
 }

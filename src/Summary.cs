@@ -15,7 +15,7 @@ namespace TxtAI.NET
             _client = Api.Create<HttpClient>(baseUrl, timeout, token);
         }
 
-        public async Task<string> SummaryAsync(string text, int? minLength, int? maxLength)
+        public async Task<string> SummarizeAsync(string text, int? minLength, int? maxLength)
         {
             var response =
                 await _client.GetAsync($"summary?text={text}&minLength={minLength}&maxLength={maxLength}");
@@ -25,7 +25,7 @@ namespace TxtAI.NET
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<List<string>> BatchSummaryAsync(List<string> texts, int? minLength, int? maxLength)
+        public async Task<List<string>> BatchSummarizeAsync(List<string> texts, int? minLength, int? maxLength)
         {
             var payload = new { texts, minLength, maxLength };
             var response = await _client.PostAsJsonAsync("batchsummary", payload);

@@ -2,15 +2,15 @@
 
 namespace LabelsDemo;
 
-public class LabelsDemo 
+public class LabelsDemo
 {
-    public static async Task Main(string[] args) 
+    public static async Task Main(string[] args)
     {
-        try 
+        try
         {
             var labels = new Labels("http://localhost:8000");
 
-            var data = new List<string> 
+            var data = new List<string>
             {
                 "Dodgers lose again, give up 3 HRs in a loss to the Giants",
                 "Giants 5 Cardinals 4 final in extra innings",
@@ -32,10 +32,10 @@ public class LabelsDemo
             Console.WriteLine($"{"Text",-75} {"Label"}");
             Console.WriteLine(new string('-', 100));
 
-            foreach (var text in data) 
+            foreach (var text in data)
             {
                 var label = await labels.LabelAsync(text, tags);
-                Console.WriteLine($"{text,-75} {tags[Int32.Parse(label[0].Id)]}");
+                Console.WriteLine($"{text,-75} {tags[int.Parse(label[0].Id)]}");
             }
 
             Console.WriteLine();
@@ -44,15 +44,15 @@ public class LabelsDemo
 
             tags = new List<string> { "😀", "😡" };
 
-            foreach (var text in data) 
+            foreach (var text in data)
             {
                 var label = await labels.LabelAsync(text, tags);
-                Console.WriteLine($"{text,-75} {tags[Int32.Parse(label[0].Id)]}");
+                Console.WriteLine($"{text,-75} {tags[int.Parse(label[0].Id)]}");
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
-    }   
+    }
 }

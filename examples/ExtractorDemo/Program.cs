@@ -62,7 +62,7 @@ public class ExtractorDemo
             Console.WriteLine($"----{adhocQuestion}----");
             var adhocQueue = new List<Question>
             {
-                new Question
+                new()
                 {
                     Name = adhocQuestion,
                     Query = adhocQuestion,

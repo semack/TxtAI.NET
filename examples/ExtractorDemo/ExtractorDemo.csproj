@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\TxtAI.NET.csproj" />
+        <ProjectReference Include="..\..\src\TxtAI.NET.csproj"/>
     </ItemGroup>
 
 </Project>
