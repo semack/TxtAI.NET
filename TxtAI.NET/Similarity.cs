@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TxtAI.Models;
+using TxtAI.NET.Models;
 
-namespace TxtAI
+namespace TxtAI.NET
 {
     public class Similarity
     {

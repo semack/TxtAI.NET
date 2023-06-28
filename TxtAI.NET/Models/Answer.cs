@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace TxtAI.Models
+namespace TxtAI.NET.Models
 {
     public class Answer
     {
