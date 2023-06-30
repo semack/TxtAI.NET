@@ -9,6 +9,7 @@ services:
     volumes:
       - ./app.yml:/app/app.yaml
       - ./.cache:/models
+      - ./article.pdf:/tmp/txtai/article.pdf
     environment:
       - CONFIG=/app/app.yaml
       - TRANSFORMERS_CACHE=/models

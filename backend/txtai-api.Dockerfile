@@ -1,5 +1,5 @@
 # Set base image
-ARG BASE_IMAGE=neuml/txtai-cpu:5.1.0
+ARG BASE_IMAGE=neuml/txtai-cpu:latest
 FROM $BASE_IMAGE
 
 # Start server and listen on all interfaces

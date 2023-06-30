@@ -23,11 +23,7 @@
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
         <None Include="..\LICENSE.md" Pack="true" PackagePath="\" />
-        <None Include=".\assets\icon.png" Pack="true" PackagePath="\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="assets\" />
+        <None Include=".\Assets\icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
