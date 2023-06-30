@@ -4,11 +4,13 @@ namespace LabelsDemo;
 
 public class LabelsDemo
 {
+    private const string SERVICE_URL = "http://localhost:8000";
+
     public static async Task Main(string[] args)
     {
         try
         {
-            var labels = new Labels("http://localhost:8000");
+            var labelsService = new Labels(SERVICE_URL);
 
             var data = new List<string>
             {
@@ -26,33 +28,29 @@ public class LabelsDemo
                 "Massive dunk!!! they are now up by 15 with 2 minutes to go"
             };
 
-            // List of labels
-            var tags = new List<string> { "Baseball", "Football", "Hockey", "Basketball" };
-
-            Console.WriteLine($"{"Text",-75} {"Label"}");
-            Console.WriteLine(new string('-', 100));
-
-            foreach (var text in data)
-            {
-                var label = await labels.LabelAsync(text, tags);
-                Console.WriteLine($"{text,-75} {tags[int.Parse(label[0].Id)]}");
-            }
+            var sportTags = new List<string> { "Baseball", "Football", "Hockey", "Basketball" };
+            await PrintLabelledData(labelsService, data, sportTags);
 
             Console.WriteLine();
-            Console.WriteLine($"{"Text",-75} {"Label"}");
-            Console.WriteLine(new string('-', 100));
 
-            tags = new List<string> { "😀", "😡" };
-
-            foreach (var text in data)
-            {
-                var label = await labels.LabelAsync(text, tags);
-                Console.WriteLine($"{text,-75} {tags[int.Parse(label[0].Id)]}");
-            }
+            var emojiTags = new List<string> { "😀", "😡" };
+            await PrintLabelledData(labelsService, data, emojiTags);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+        }
+    }
+
+    private static async Task PrintLabelledData(Labels labelsService, List<string> data, List<string> tags)
+    {
+        Console.WriteLine($"{"Text",-75} {"Label"}");
+        Console.WriteLine(new string('-', 100));
+
+        foreach (var text in data)
+        {
+            var label = await labelsService.LabelAsync(text, tags);
+            Console.WriteLine($"{text,-75} {tags[int.Parse(label[0].Id)]}");
         }
     }
 }

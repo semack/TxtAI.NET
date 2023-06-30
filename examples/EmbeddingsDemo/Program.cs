@@ -5,93 +5,114 @@ namespace EmbeddingsDemo;
 
 public class EmbeddingsDemo
 {
+    private const string SERVICE_URL = "http://localhost:8000";
+
     public static async Task Main(string[] args)
     {
         try
         {
-            var embeddings = new Embeddings("http://localhost:8000");
+            var embeddings = new Embeddings(SERVICE_URL);
 
-            var data = new List<string>
-            {
-                "US tops 5 million confirmed virus cases",
-                "Canada's last fully intact ice shelf has suddenly collapsed, forming a Manhattan-sized iceberg",
-                "Beijing mobilises invasion craft along coast as Taiwan tensions escalate",
-                "The National Park Service warns against sacrificing slower friends in a bear attack",
-                "Maine man wins $1M from $25 lottery ticket",
-                "Make huge profits without work, earn up to $100,000 a day"
-            };
+            var data = PrepareData();
 
-            var documents = new List<Document>();
-            for (var x = 0; x < data.Count; x++)
-            {
-                var d = new Document
-                {
-                    Id = x.ToString(),
-                    Text = data[x]
-                };
-                documents.Add(d);
-            }
+            await ProcessSimilarityQueries(embeddings, data);
 
-            Console.WriteLine("Running similarity queries");
-            Console.WriteLine($"{"Query",-20} {"Best Match"}");
-            Console.WriteLine(new string('-', 50));
+            await AddDocumentsToIndex(embeddings, data);
 
-            var queries = new List<string>
-            {
-                "feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky",
-                "dishonest junk"
-            };
+            await ProcessSearchQueries(embeddings, data);
 
-            foreach (var similarityQuery in queries)
-            {
-                var similarityResults = await embeddings.SimilarityAsync(similarityQuery, data);
-                var similarityUid = int.Parse(similarityResults[0].Id);
-                Console.WriteLine($"{similarityQuery,-20} {data[similarityUid]}");
-            }
-
-            await embeddings.AddAsync(documents);
-            await embeddings.IndexAsync();
-
-            Console.WriteLine("\nBuilding an Embeddings index");
-            Console.WriteLine($"{"Query",-20} {"Best Match"}");
-            Console.WriteLine(new string('-', 50));
-
-            foreach (var searchQuery in queries)
-            {
-                var searchResults = await embeddings.SearchAsync(searchQuery, 1);
-                var searchUid = int.Parse(searchResults[0].Id);
-                Console.WriteLine($"{searchQuery,-20} {data[searchUid]}");
-            }
-
-            data[0] = "See it: baby panda born";
-            var updates = new List<Document>
-            {
-                new()
-                {
-                    Id = "0",
-                    Text = data[0]
-                }
-            };
-
-            await embeddings.DeleteAsync(new List<string> { "5" });
-            await embeddings.AddAsync(updates);
-            await embeddings.UpsertAsync();
-
-            Console.WriteLine("\nTest delete/upsert/count");
-            Console.WriteLine($"{"Query",-20} {"Best Match"}");
-            Console.WriteLine(new string('-', 50));
-
-            var query = "feel good story";
-            var results = await embeddings.SearchAsync(query, 1);
-            var uid = int.Parse(results[0].Id);
-            Console.WriteLine($"{query,-20} {data[uid]}");
-
-            var count = await embeddings.CountAsync();
-            Console.WriteLine($"\nTotal Count: {count}");
+            await TestDeleteUpsertCount(embeddings, data);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
+    }
+
+    private static List<string> PrepareData()
+    {
+        return new List<string>
+        {
+            "US tops 5 million confirmed virus cases",
+            "Canada's last fully intact ice shelf has suddenly collapsed, forming a Manhattan-sized iceberg",
+            "Beijing mobilises invasion craft along coast as Taiwan tensions escalate",
+            "The National Park Service warns against sacrificing slower friends in a bear attack",
+            "Maine man wins $1M from $25 lottery ticket",
+            "Make huge profits without work, earn up to $100,000 a day"
+        };
+    }
+
+    private static async Task ProcessSimilarityQueries(Embeddings embeddings, List<string> data)
+    {
+        var queries = new List<string>
+        {
+            "feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky",
+            "dishonest junk"
+        };
+
+        Console.WriteLine("Running similarity queries");
+        Console.WriteLine($"{"Query",-20} {"Best Match"}");
+        Console.WriteLine(new string('-', 50));
+
+        foreach (var query in queries)
+        {
+            var result = await embeddings.SimilarityAsync(query, data);
+            var id = int.Parse(result[0].Id);
+            Console.WriteLine($"{query,-20} {data[id]}");
+        }
+    }
+
+    private static async Task AddDocumentsToIndex(Embeddings embeddings, List<string> data)
+    {
+        var documents = data.Select((text, id) => new Document { Id = id.ToString(), Text = text }).ToList();
+
+        await embeddings.AddAsync(documents);
+        await embeddings.IndexAsync();
+    }
+
+    private static async Task ProcessSearchQueries(Embeddings embeddings, List<string> data)
+    {
+        var queries = new List<string>
+        {
+            "feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky",
+            "dishonest junk"
+        };
+
+        Console.WriteLine("\nBuilding an Embeddings index");
+        Console.WriteLine($"{"Query",-20} {"Best Match"}");
+        Console.WriteLine(new string('-', 50));
+
+        foreach (var query in queries)
+        {
+            var result = await embeddings.SearchAsync(query, 1);
+            var id = int.Parse(result[0].Id);
+            Console.WriteLine($"{query,-20} {data[id]}");
+        }
+    }
+
+    private static async Task TestDeleteUpsertCount(Embeddings embeddings, List<string> data)
+    {
+        data[0] = "See it: baby panda born";
+
+        var updates = new List<Document>
+        {
+            new() { Id = "0", Text = data[0] }
+        };
+
+        await embeddings.DeleteAsync(new List<string> { "5" });
+        await embeddings.AddAsync(updates);
+        await embeddings.UpsertAsync();
+
+        Console.WriteLine("\nTest delete/upsert/count");
+        Console.WriteLine($"{"Query",-20} {"Best Match"}");
+        Console.WriteLine(new string('-', 50));
+
+        var query = "feel good story";
+        var result = await embeddings.SearchAsync(query, 1);
+        var id = int.Parse(result[0].Id);
+        Console.WriteLine($"{query,-20} {data[id]}");
+
+        var count = await embeddings.CountAsync();
+        Console.WriteLine($"\nTotal Count: {count}");
     }
 }

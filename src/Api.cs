@@ -1,24 +1,21 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 
-namespace TxtAI.NET
+namespace TxtAI.NET;
+
+class Api
 {
-    class Api
+    public static T Create<T>(string baseUrl, int timeout = 120, string token = null) where T : HttpClient, new()
     {
-        public static T Create<T>(string baseUrl, int timeout = 120, string token = null) where T : HttpClient, new()
-        {
-            var client = new T();
+        var client = new T();
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.Timeout = TimeSpan.FromSeconds(timeout);
-            if (string.IsNullOrEmpty(token))
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.Timeout = TimeSpan.FromSeconds(timeout);
+        if (string.IsNullOrEmpty(token))
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            client.BaseAddress = new Uri(baseUrl);
+        client.BaseAddress = new Uri(baseUrl);
 
-            return client;
-        }
+        return client;
     }
 }

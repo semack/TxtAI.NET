@@ -5,11 +5,13 @@ namespace ExtractorDemo;
 
 public class ExtractorDemo
 {
+    private const string SERVICE_URL = "http://localhost:8000";
+
     public static async Task Main(string[] args)
     {
         try
         {
-            var extractor = new Extractor("http://localhost:8000");
+            var extractorService = new Extractor(SERVICE_URL);
 
             var data = new List<string>
             {
@@ -27,58 +29,65 @@ public class ExtractorDemo
                 "Flyers win 4-1"
             };
 
-            // Run series of questions
             var questions = new List<string> { "What team won the game?", "What was score?" };
             var queries = new List<string>
                 { "Red Sox - Blue Jays", "Phillies - Braves", "Dodgers - Giants", "Flyers - Lightning" };
 
-            foreach (var query in queries)
-            {
-                Console.WriteLine($"----{query}----");
+            await ProcessQueries(extractorService, questions, queries, data);
 
-                var seriesQueue = new List<Question>();
-                foreach (var seriesQuestion in questions)
-                {
-                    seriesQueue.Add(new Question
-                    {
-                        Name = seriesQuestion,
-                        Query = query,
-                        QuestionText = seriesQuestion,
-                        Snippet = false
-                    });
-                }
-
-                foreach (var answer in await extractor.ExtractAsync(seriesQueue, data))
-                {
-                    Console.WriteLine(answer);
-                }
-
-                Console.WriteLine();
-            }
-
-            // Ad-hoc questions
             var adhocQuestion = "What hockey team won?";
-
-            Console.WriteLine($"----{adhocQuestion}----");
-            var adhocQueue = new List<Question>
-            {
-                new()
-                {
-                    Name = adhocQuestion,
-                    Query = adhocQuestion,
-                    QuestionText = adhocQuestion,
-                    Snippet = false
-                }
-            };
-
-            foreach (var answer in await extractor.ExtractAsync(adhocQueue, data))
-            {
-                Console.WriteLine(answer);
-            }
+            await ProcessAdhocQuestion(extractorService, adhocQuestion, data);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+        }
+    }
+
+    private static async Task ProcessQueries(Extractor extractorService, List<string> questions, List<string> queries,
+        List<string> data)
+    {
+        foreach (var query in queries)
+        {
+            Console.WriteLine($"----{query}----");
+
+            var seriesQueue = BuildQuestionQueue(questions, query);
+            await PrintAnswers(extractorService, seriesQueue, data);
+
+            Console.WriteLine();
+        }
+    }
+
+    private static async Task ProcessAdhocQuestion(Extractor extractorService, string adhocQuestion, List<string> data)
+    {
+        Console.WriteLine($"----{adhocQuestion}----");
+        var adhocQueue = BuildQuestionQueue(new List<string> { adhocQuestion }, adhocQuestion);
+        await PrintAnswers(extractorService, adhocQueue, data);
+    }
+
+    private static List<Question> BuildQuestionQueue(List<string> questions, string query)
+    {
+        var queue = new List<Question>();
+
+        foreach (var question in questions)
+        {
+            queue.Add(new Question
+            {
+                Name = question,
+                Query = query,
+                QuestionText = question,
+                Snippet = false
+            });
+        }
+
+        return queue;
+    }
+
+    private static async Task PrintAnswers(Extractor extractorService, List<Question> questionQueue, List<string> data)
+    {
+        foreach (var answer in await extractorService.ExtractAsync(questionQueue, data))
+        {
+            Console.WriteLine(answer);
         }
     }
 }

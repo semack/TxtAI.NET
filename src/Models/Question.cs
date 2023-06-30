@@ -1,16 +1,14 @@
 using Newtonsoft.Json;
 
-namespace TxtAI.NET.Models
+namespace TxtAI.NET.Models;
+
+public class Question
 {
-    public class Question
-    {
+    [JsonProperty("name")] public string Name { get; set; }
 
-        [JsonProperty("name")] public string Name { get; set; }
+    [JsonProperty("query")] public string Query { get; set; }
 
-        [JsonProperty("query")] public string Query { get; set; }
+    [JsonProperty("question")] public string QuestionText { get; set; }
 
-        [JsonProperty("question")] public string QuestionText { get; set; }
-
-        [JsonProperty("snippet")] public bool Snippet { get; set; }
-    }
+    [JsonProperty("snippet")] public bool Snippet { get; set; }
 }
