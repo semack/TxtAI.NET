@@ -24,7 +24,4 @@ jobs:
       run: dotnet restore
     - name: Build
       run: |
-        dotnet build TxtAI.NET.sln --configuration Release --no-restore
-    - name: Publish
-      run: |
-        dotnet nuget push ./nupkgs/*.nupkg --source ${{secrets.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY}} 
+        dotnet build TxtAI.NET.sln --configuration Release --no-restore 
